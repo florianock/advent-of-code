@@ -6,9 +6,33 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Program.fs" />
-        <None Include="Day1.fsx" />
-        <Content Include="inputs\input_day01.txt" />
+        <Content Include="template\.template.config\template.json" />
+        <Content Include="template\DayXX.fsproj" />
+        <Content Include="template\input.txt" />
+        <Compile Include="template\DayXX.fs" />
+        <Compile Include="template\DayXXTests.fs" />
+        <Compile Include="template\ProgramXX.fs" />
+        <None Include="Day01\Day01.fsx" />
+        <Content Include="Day01\input.txt" />
+        <Content Include="Day02\Day02.fsproj" />
+        <Content Include="Day02\input.txt" />
+        <Compile Include="Day02\Day02.fs" />
+        <Compile Include="Day02\Day02Tests.fs" />
+        <Compile Include="Day02\Program02.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="coverlet.collector" Version="3.2.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+      <PackageReference Include="NUnit" Version="3.13.3" />
+      <PackageReference Include="NUnit.Analyzers" Version="3.5.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
     </ItemGroup>
 
 </Project>
