@@ -1,11 +1,12 @@
 ﻿open System.IO
 open System
 
-let analyse (problem: string) = problem.Split("\n\n") |> Array.map (fun l -> l.Split('\n'))
+// --- Day 1: Calorie Counting ---
 
-let sr = new StreamReader("input.txt")
+let analyse (problem: string) = problem.TrimEnd().Split("\n\n") |> Array.map (fun l -> l.Split('\n'))
+
+let sr = new StreamReader("src/Day01/input.txt")
 let fileContents = sr.ReadToEnd()
-printfn $"%s{fileContents[..2]}"
 let nums = fileContents |> analyse
 
 let caloriesForElves (nums: string[][]) =
