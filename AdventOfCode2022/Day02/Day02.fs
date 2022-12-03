@@ -9,8 +9,7 @@ let toIndexTuples (shapes: seq<string>) = shapes |> Seq.map(fun s -> ("ABC".Inde
 let solve input scoreFunction =
     input
     |> toIndexTuples
-    |> Seq.map scoreFunction
-    |> Seq.sum
+    |> Seq.sumBy scoreFunction
 
 let getResultScore shapeIndexes =
     match shapeIndexes with
