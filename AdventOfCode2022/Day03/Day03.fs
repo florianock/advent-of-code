@@ -12,23 +12,23 @@ let rec intersect xs ys =
         else            intersect xs  ys'
     | _ -> []
 
-let intersectStrings (lst: seq<string>) =
-    let sortedListOfListOfChars = lst |> Seq.map(fun el -> el.ToCharArray() |> Array.sort |> List.ofArray)
-    let initial = Seq.head sortedListOfListOfChars
-    sortedListOfListOfChars |> Seq.fold intersect initial
+let intersectRucksacks (rucksacks: seq<string>) =
+    let sortedRucksacks = rucksacks |> Seq.map(fun el -> el.ToCharArray() |> Array.sort |> List.ofArray)
+    let initialRucksack = Seq.head sortedRucksacks
+    sortedRucksacks |> Seq.fold intersect initialRucksack
 
-let charPriority c = ['a'..'z'] @ ['A'..'Z'] |> Seq.findIndex (fun el -> c = el) |> (+) 1
+let priorityOf item = ['a'..'z'] @ ['A'..'Z'] |> Seq.findIndex (fun el -> el = item) |> (+) 1
     
-let getGroupPriority = intersectStrings >> List.head >> charPriority
+let getPriorityOfCommonItem = intersectRucksacks >> List.head >> priorityOf
 
 let solvePart1 (elvenRucksacks: seq<string>) =
     elvenRucksacks
-    |> Seq.map(
-        fun rucksack -> seq { rucksack[..rucksack.Length/2-1]; rucksack[rucksack.Length/2..] } |> getGroupPriority)
+    |> Seq.map(fun rucksack ->
+        seq { rucksack[..rucksack.Length/2-1]; rucksack[rucksack.Length/2..] } |> getPriorityOfCommonItem)
     |> Seq.sum
 
 let solvePart2 (elvenRucksacks: seq<string>) =
     elvenRucksacks
     |> Seq.splitInto (Seq.length elvenRucksacks / 3)
-    |> Seq.map getGroupPriority
+    |> Seq.map getPriorityOfCommonItem
     |> Seq.sum
