@@ -1,5 +1,7 @@
 ﻿module Day04
 
+// --- Day 4: Camp Cleanup ---
+
 let expandSections (sectionLimits: string): Set<int> =
     let limits = sectionLimits.Split("-") |> Array.map System.Int32.Parse
     seq { limits[0] .. limits[1] } |> Set.ofSeq
