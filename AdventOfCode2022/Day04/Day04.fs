@@ -1,8 +1,8 @@
 ﻿module Day04
 
 let expandSections (sectionLimits: string): Set<int> =
-    let list = sectionLimits.Split("-") |> Array.map System.Int32.Parse
-    seq { list[0] .. list[1] } |> Set.ofSeq
+    let limits = sectionLimits.Split("-") |> Array.map System.Int32.Parse
+    seq { limits[0] .. limits[1] } |> Set.ofSeq
 
 let processPair (line: string): Set<int> * Set<int> =
     let pair = line.Split(",") |> Array.map expandSections
