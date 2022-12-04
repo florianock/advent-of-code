@@ -1,14 +1,14 @@
 ﻿module Day04
 
-let expandSections (x: string) =
-    let list = x.Split("-") |> Array.map System.Int32.Parse
+let expandSections (sectionLimits: string): Set<int> =
+    let list = sectionLimits.Split("-") |> Array.map System.Int32.Parse
     seq { list[0] .. list[1] } |> Set.ofSeq
 
-let processPair (line: string) =
-    let pairs = line.Split(",") |> Array.map expandSections
-    (pairs[0], pairs[1])
+let processPair (line: string): Set<int> * Set<int> =
+    let pair = line.Split(",") |> Array.map expandSections
+    ( pair[0], pair[1] )
 
-let preprocess (puzzle: string) = puzzle.TrimEnd().Split("\n") |> Array.map processPair
+let preprocess (puzzle: string): (Set<int> * Set<int>)[]= puzzle.TrimEnd().Split("\n") |> Array.map processPair
 
 let solvePart1 (input: (Set<int> * Set<int>)[]) =
     input
