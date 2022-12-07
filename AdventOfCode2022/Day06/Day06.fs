@@ -3,7 +3,7 @@
 let preprocess (puzzle: string): string = puzzle.Trim()
 
 let findDistinct (numberOfDistinctCharacters: int) (input: string): int =
-    let uniq (str: string): bool = str.Length = (str.ToCharArray() |> Array.distinct |> Array.length)
+    let uniq (str: string): bool = str.Length = (Set str).Count
     let rec loop n i (str: string): int = 
         match str with
         | str when str.Length < n -> -1
@@ -11,6 +11,6 @@ let findDistinct (numberOfDistinctCharacters: int) (input: string): int =
         | _ -> loop n (i + 1) str[1..]
     loop numberOfDistinctCharacters numberOfDistinctCharacters input
 
-let solvePart1 = findDistinct 4
+let solvePart1: string -> int = findDistinct 4
 
-let solvePart2 = findDistinct 14
+let solvePart2: string -> int = findDistinct 14
