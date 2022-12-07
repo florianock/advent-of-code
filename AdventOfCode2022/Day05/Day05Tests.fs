@@ -51,7 +51,7 @@ let applyInstructionTest () =
             [| "X"; "B"; "A"; "X" |]
             [| "X"; "X"; "X"; "C" |]
         |]
-    let instruction = (2, 2, 1)
+    let instruction = struct(2, 2, 1)
     let actual = applyInstruction false stack instruction
     Assert.AreEqual(
         [|
@@ -69,7 +69,7 @@ let applyInstructionTestMultipleCratesAtOnce () =
             [| "X"; "B"; "X"; "A" |]
             [| "X"; "X"; "X"; "C" |]
         |]
-    let instruction = (2, 2, 1)
+    let instruction = struct(2, 2, 1)
     let actual = applyInstruction true stack instruction
     Assert.AreEqual(
         [|
