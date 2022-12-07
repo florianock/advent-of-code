@@ -15,7 +15,7 @@ let displayTitle input =
 
 let readLines (puzzle: string) : seq<string>[] =
     puzzle.TrimEnd().Split(Environment.NewLine + Environment.NewLine)
-    |> Array.map (fun s -> s.Split(Environment.NewLine))
+    |> Array.map (fun s -> s.Split(Environment.NewLine) |> Seq.ofArray)
 
 let setupStack (stacks: Stacks) (instruction: string): Stacks =
     [| for i = 0 to stacks.Length - 1 do

@@ -16,13 +16,17 @@ move 1 from 1 to 2
 
 [<Test>]
 let solvePart1 () =
-    let input = test |> readLines
+    let input =
+        test.TrimEnd().Split("\n" + "\n")
+        |> Array.map (fun s -> s.Split("\n") |> Seq.ofArray)
     let actual = solvePart1 input
     Assert.AreEqual("CMZ", actual)
 
 [<Test>]
 let solvePart2 () =
-    let input = test |> readLines
+    let input =
+        test.TrimEnd().Split("\n" + "\n")
+        |> Array.map (fun s -> s.Split("\n") |> Seq.ofArray)
     let actual = solvePart2 input
     Assert.AreEqual("MCD", actual)
 
@@ -143,7 +147,10 @@ let followInstructionsTestMoreMovesAndMultipleCratesAtOnce () =
 
 [<Test>]
 let parseTest () =
-    let actualInstructions, actualStack = test |> readLines |> parse
+    let actualInstructions, actualStack =
+        test.TrimEnd().Split("\n" + "\n")
+        |> Array.map (fun s -> s.Split("\n") |> Seq.ofArray)
+        |> parse
     Assert.AreEqual(
         seq {
             "move 1 from 2 to 1"
