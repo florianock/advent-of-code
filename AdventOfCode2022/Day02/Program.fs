@@ -3,13 +3,13 @@
 open System.IO
 open Day02
 
-let duration f input = 
-    let timer = System.Diagnostics.Stopwatch()
-    timer.Start()
+let duration f input =
+    let timer = System.Diagnostics.Stopwatch ()
+    timer.Start ()
     let returnValue = f input
-    timer.Stop()
+    timer.Stop ()
     printfn "Elapsed Time: %i ms" timer.ElapsedMilliseconds
-    timer.Reset()
+    timer.Reset ()
     returnValue
 
 [<EntryPoint>]

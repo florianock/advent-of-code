@@ -5,7 +5,10 @@
     "type": "project"
   },
   "author": "Florian Ockhuysen",
-  "classifications": ["Common", "Console"],
+  "classifications": [
+    "Common",
+    "Console"
+  ],
   "identity": "florianock.AOC.FSharp",
   "name": "Advent of Code 2022",
   "shortName": "aoc",
