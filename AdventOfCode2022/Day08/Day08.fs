@@ -4,7 +4,7 @@
 
 let preprocess (puzzle: string) =
     puzzle.TrimEnd().Split ("\n")
-    |> Array.map (fun s -> s |> Seq.toList |> List.map (fun c -> System.Int32.Parse (c.ToString ())))
+    |> Array.map (fun s -> s |> Seq.toList |> List.map (fun c -> int (c.ToString ())))
     |> List.ofArray
 
 let lookAhead i j (matrix: int list list) = matrix[i][j + 1 ..]
