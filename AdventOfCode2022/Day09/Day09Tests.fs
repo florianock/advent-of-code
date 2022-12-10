@@ -34,7 +34,7 @@ let solvePart1 () =
 let solvePart2Simple () =
     let input = test |> preprocess
     let actual = solvePart2 input
-    Assert.AreEqual (0, actual)
+    Assert.AreEqual (1, actual)
 
 [<Test>]
 let solvePart2LargerExample () =
