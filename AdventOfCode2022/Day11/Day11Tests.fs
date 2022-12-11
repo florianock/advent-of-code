@@ -43,4 +43,11 @@ let solvePart1 () =
 let solvePart2 () =
     let input = test |> preprocess
     let actual = solvePart2 input
-    Assert.AreEqual (2713310158u, actual)
+    Assert.AreEqual (2713310158UL, actual)
+
+
+// int32.MaxValue  2_147_483_647
+// uint32.MaxValue 4_294_967_295
+// answer part 2   28_537_348_205
+// int64.MaxValue  9_223_372_036_854_775_807
+// uint64.MaxValue 18_446_744_073_709_551_615
