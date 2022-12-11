@@ -26,12 +26,12 @@ type CathodeRayDevice =
         let screenPointer = this.Screen.Length % 40
 
         this.Screen <-
-            if (this.X - 2) < screenPointer && screenPointer < (this.X + 2) then
+            if this.X - 2 < screenPointer && screenPointer < this.X + 2 then
                 this.Screen + "#"
             else
                 this.Screen + "."
 
-    member this.nextCycle() =
+    member this.tick() =
         this.Cycle <- this.Cycle + 1
         this.saveXIfNecessary ()
         this.updateScreen ()
@@ -60,10 +60,10 @@ let runProgram (program: seq<string>) =
 
     for cmd in program do
         match cmd with
-        | "noop" -> device.nextCycle ()
+        | "noop" -> device.tick ()
         | Addx i ->
-            device.nextCycle ()
-            device.nextCycle ()
+            device.tick ()
+            device.tick ()
             device.addX i
         | _ -> ()
 
