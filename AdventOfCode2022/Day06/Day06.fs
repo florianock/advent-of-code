@@ -1,5 +1,7 @@
 ﻿module Day06
 
+// --- Day 6: Tuning Trouble ---
+
 let preprocess (puzzle: string) : string = puzzle.Trim ()
 
 let findDistinct (numberOfDistinctCharacters: int) (input: string) : int =
