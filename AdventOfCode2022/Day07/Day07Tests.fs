@@ -3,7 +3,8 @@
 open NUnit.Framework
 open Day07
 
-let test = @"$ cd /
+let test =
+    @"$ cd /
 $ ls
 dir a
 14848514 b.txt
@@ -25,17 +26,16 @@ $ ls
 4060174 j
 8033020 d.log
 5626152 d.ext
-7214296 k
-"
+7214296 k"
 
 [<Test>]
 let solvePart1 () =
     let input = test |> preprocess
     let actual = solvePart1 input
-    Assert.AreEqual(95437, actual)
+    Assert.AreEqual (95437u, actual)
 
 [<Test>]
 let solvePart2 () =
     let input = test |> preprocess
     let actual = solvePart2 input
-    Assert.AreEqual(0, actual)
+    Assert.AreEqual (24933642, actual)
