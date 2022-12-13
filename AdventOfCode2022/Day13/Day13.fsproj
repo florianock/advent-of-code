@@ -8,15 +8,16 @@
         <Content Include="input.txt">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Compile Include="Day13.fs"/>
-        <Compile Include="Day13Tests.fs"/>
-        <Compile Include="Program.fs"/>
+        <Compile Include="Day13.fs" />
+        <Compile Include="Day13Tests.fs" />
+        <Compile Include="Program.fs" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0"/>
-        <PackageReference Include="NUnit" Version="3.13.3"/>
-        <PackageReference Include="NUnit3TestAdapter" Version="4.3.1"/>
-        <PackageReference Include="NUnit.Analyzers" Version="3.5.0"/>
-        <PackageReference Include="coverlet.collector" Version="3.2.0"/>
+        <PackageReference Include="FParsec" Version="1.1.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+        <PackageReference Include="NUnit" Version="3.13.3" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
+        <PackageReference Include="NUnit.Analyzers" Version="3.5.0" />
+        <PackageReference Include="coverlet.collector" Version="3.2.0" />
     </ItemGroup>
 </Project>
