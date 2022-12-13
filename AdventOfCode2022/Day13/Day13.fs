@@ -1,6 +1,7 @@
 ﻿module Day13
 
 // source: https://github.com/jovaneyck/advent-of-code-2022/tree/main/day%2013
+// TODO play around with FParsec, write a parser from scratch
 open FParsec
 
 type Packet =
@@ -64,8 +65,7 @@ let solvePart2 input =
     let packets =
         input
         |> Array.filter (fun s -> s <> "")
-        |> Array.map (fun s -> s.Split "\n")
-        |> Array.reduce Array.append
+        |> Array.collect (fun s -> s.Split "\n")
         |> Array.toList
 
     let divTwo = List [ List [ Int 2 ] ]
