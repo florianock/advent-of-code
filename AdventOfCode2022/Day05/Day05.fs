@@ -15,7 +15,7 @@ let displayTitle input =
 
 let readLines (puzzle: string) : seq<string>[] =
     puzzle.TrimEnd().Split (Environment.NewLine + Environment.NewLine)
-    |> Array.map (fun s -> s.Split (Environment.NewLine) |> Seq.ofArray)
+    |> Array.map (fun s -> s.Split Environment.NewLine |> Seq.ofArray)
 
 let setupStack (stacks: Stacks) (instruction: string) : Stacks =
     [| for i = 0 to stacks.Length - 1 do
@@ -34,7 +34,7 @@ let parse ([| stackSetup; instructions |]: seq<string>[]) : seq<string> * Stacks
     instructions, initialStack
 
 let parseInstruction (instruction: string) : Move =
-    let items = instruction.Split (' ')
+    let items = instruction.Split ' '
     struct (int items[1], int items[3], int items[5])
 
 let getTopCrates (stacks: Stacks) : string =
