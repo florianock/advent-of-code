@@ -28,5 +28,15 @@ let solvePart1 () =
 [<Test>]
 let solvePart2 () =
     let input = test |> preprocess
-    let actual = solvePart2 input
-    Assert.AreEqual(0, actual)
+    let actual = solvePart2 20 input
+    Assert.AreEqual(56000011, actual)
+
+[<Test>]
+let ``coversRowFromDistance correctly calculates cover`` () =
+    let sensorData =
+        { SensorData.Default with
+            Position = (8, 7)
+            Distance = 9 }
+    let actual = coversRowFromDistance 10 sensorData
+    Assert.AreEqual(set [2..14], actual)
+    
