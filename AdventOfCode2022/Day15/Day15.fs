@@ -7,33 +7,23 @@ open System.Text.RegularExpressions
 type SensorData =
     { Position: int * int
       Beacon: int * int
-      Distance: int
-      Perimeter: (int * int) array }
-
-    static member Default =
-        { Position = (0, 0)
-          Beacon = (0, 0)
-          Distance = 0
-          Perimeter = [||] }
-
-    member this.covers(x, y) : bool =
-        let a, b = this.Position
-
-        x - this.Distance <= a
-        && a <= x + this.Distance
-        && y - this.Distance <= b
-        && b <= y + this.Distance
+      Distance: int }
 
 let preprocess (puzzle: string) =
+    let defaultSensor =
+        { Position = (0, 0)
+          Beacon = (0, 0)
+          Distance = 0 }
+
     puzzle.TrimEnd().Split("\n")
     |> Array.map (fun l ->
         let r = Regex.Matches(l, "(x|y)=(-?\d+)")
 
-        { SensorData.Default with
+        { defaultSensor with
             Position = (int r[0].Groups[2].Value, int r[1].Groups[2].Value)
             Beacon = (int r[2].Groups[2].Value, int r[3].Groups[2].Value) })
 
-let inline dist (x1, y1) (x2, y2) : int = abs (x1 - x2) + abs (y1 - y2)
+let inline dist (x1, y1) (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
 
 let coversRowFromDistance row sensor =
     let x, y = sensor.Position
@@ -88,39 +78,52 @@ let solvePart2Slow (searchSpace: int) sensorsAndBeacons : uint64 =
 
     result
 
-let fillCloudAndPerimeter searchSpace idx sensorData =
-    printfn $"filling {idx}"
-    let x, y = sensorData.Position
-    let distance = sensorData.Distance
+let inline generatePerimeter searchSpace sensor : (int * int) seq =
+    let x, y = sensor.Position
+    let d = sensor.Distance
 
-    let mutable perimeter =
-        [| (x, y - distance - 1); (x, y + distance + 1) |]
-        |> Array.filter (fun (_, y) -> 0 <= y && y <= searchSpace)
-    // for i = (max 0 (y - distance)) to min searchSpace (y + distance) do
-    //     let diffY = abs (y - i)
-    //     let min = x - distance + diffY - 1
-    //     let max = x + distance - diffY + 1
-    //     perimeter <-
-    //         [| (min, i); (max, i) |]
-    //         |> Array.filter (fun (x, _) -> 0 <= x && x <= searchSpace)
-    //         |> Array.append perimeter
-    { sensorData with Perimeter = perimeter }
+    seq {
+        let minY = y - d - 1
+        let maxY = y + d + 1
+        if 0 <= minY && minY <= searchSpace then
+            yield (x, minY)
+        if 0 <= maxY && maxY <= searchSpace then
+            yield (x, maxY)
+        for i = (max 0 (y - d)) to min searchSpace (y + d) do
+            let diffY = abs (y - i)
+            let minX = x - d + diffY - 1
+            let maxX = x + d - diffY + 1
+            if 0 <= minX && minX <= searchSpace then
+                yield (minX, i)
+            if 0 <= maxX && maxX <= searchSpace then
+                yield (maxX, i)
+    }
 
-let tryFreePointOnPerimeter searchSpace sensors perimeter =
+// there is no sensor s where dist s point <= s.Distance
+// there is no sensor where point is within range
+// for all sensors, dist s point > s.Distance
+let tryFreePointOnPerimeter (searchSpace: int) (sensors: SensorData[]) sensor =
     let rec loop space lst points =
-        match Array.tryHead points with
+    // todo see if it helps performance if lst (which is a constant) remains in outer context
+        match Seq.tryHead points with
         | None -> None
-        | Some  ->
-            if 
-            
-    loop searchSpace sensors perimeter
+        | Some point ->
+            if Array.forall (fun s -> (dist s.Position point) > s.Distance) lst then
+                Some point
+            else
+                loop space lst (Seq.tail points)
+
+    let perimeterPoints = generatePerimeter searchSpace sensor
+    printfn $"Looping {perimeterPoints |> Seq.length} perimeter points; {sensors.Length} sensors"
+    loop searchSpace sensors perimeterPoints
 
 let tryFindGap (searchSpace: int) (sensorData: SensorData[]) : (int * int) option =
     let rec loop space allSensors lst =
         match Array.tryHead lst with
         | None -> None
         | Some sensor ->
-            let result = tryFreePointOnPerimeter space allSensors sensor.Perimeter
+            printfn "hi"
+            let result = tryFreePointOnPerimeter space allSensors sensor
             match result with
             | Some p -> Some p
             | None -> loop space allSensors (Array.tail lst)
@@ -134,18 +137,3 @@ let solvePart2 (searchSpace: int) (sensorData: SensorData array) : int =
     |> function
         | Some(x, y) -> x * 4_000_000 + y
         | None -> failwith "No free point was found."
-
-
-// |> Array.mapi (fillCloudAndPerimeter searchSpace)
-
-// sensors
-// |> Array.mapi (fun idx s ->
-//     printfn $"folding {idx}"
-//     (s.Perimeter, sensors)
-//     ||> Array.fold (fun state c ->
-//         state
-//         |> Array.filter (fun p ->
-//             not(c.covers p))))
-// |> Array.concat
-// |> Array.distinct
-// |> Array.head
