@@ -15,7 +15,7 @@ let main argv =
     let part1Duration = timer.ElapsedMilliseconds
     printfn $"Part 1: %d{resultPart1} (execution took %i{part1Duration} ms)"
     
-    let resultPart2 = solvePart2 input
+    let resultPart2 = solvePart2 4_000_000 input
     
     timer.Stop()
     printfn $"Part 2: %d{resultPart2} (execution took %i{timer.ElapsedMilliseconds - part1Duration} ms)"
