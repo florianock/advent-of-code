@@ -18,15 +18,18 @@ let listParser =
     (pchar '[') >>. (sepBy packetParser (pchar ',')) .>> (pchar ']') |>> List
 
 packetParserRef.Value <- (listParser <|> intParser)
+let parser = packetParser .>> eof
+
+let parse packet = run parser packet
 
 let parsePacket packet =
-    let result = run packetParser packet
+    let result = parse packet
 
     match result with
     | Success (res, _, _) -> res
-    | _ -> failwithf "%A" result
+    | _ -> failwithf $"%A{result}"
 
-let parse (packets: string[]) =
+let parseInput (packets: string[]) =
     packets
     |> Array.map (fun ps ->
         let [ left; right ] = ps.Split "\n" |> Array.map parsePacket |> Array.toList
@@ -53,7 +56,7 @@ let rec sorted left right =
 let preprocess (puzzle: string) = puzzle.TrimEnd().Split "\n\n"
 
 let solvePart1 input : int =
-    parse input
+    parseInput input
     |> List.map (fun t -> t ||> sorted)
     |> List.indexed
     |> List.map (fun (i, f) -> (i + 1, f))
