@@ -1,4 +1,4 @@
-﻿module DayXX
+﻿module Day19
 
 let preprocess (puzzle: string) : seq<string> = puzzle.TrimEnd().Split "\n"
 

@@ -1,5 +1,7 @@
 ﻿module Day12
 
+// --- Day 12: Hill Climbing Algorithm ---
+
 open Microsoft.FSharp.Collections
 
 let START = 'S'
@@ -100,6 +102,24 @@ let find2D (c: char) (arr: char[,]) : (int * int) option =
 
     go 0 0
 
+let flatten (A: 'a[,]) = A |> Seq.cast<'a>
+
+let getColumn c (A: _[,]) = flatten A.[*, c..c] |> Seq.toArray
+
+let getRow r (A: _[,]) = flatten A.[r..r, *] |> Seq.toArray
+
+let displayGrid (grid: int[,]) : unit =
+    let numRows = grid.GetLength 0
+    let mutable result = "\n"
+
+    for r = 0 to numRows - 1 do
+        let row = getRow r grid |> Array.fold (fun s i -> s + "\t" + i.ToString ()) ""
+        result <- result + row + "\n"
+
+    result <- result.Replace ("\n\t", "\n")
+
+    printf $"{result}"
+
 let solvePart1 (input: char[,]) =
     let sp = input |> find2D START |> Option.fold (fun _ v -> v) (-1, -1)
     let s1, s2 = sp
@@ -120,6 +140,7 @@ let solvePart1 (input: char[,]) =
 
     // let graph = Graph startPaths
     // graph.findShortestPath startPos endPos
+    // displayGrid result
     result[e1, e2]
 // 3403 is too high
 
