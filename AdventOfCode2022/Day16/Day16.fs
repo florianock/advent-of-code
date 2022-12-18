@@ -67,6 +67,15 @@ let goalValves valves =
     |> List.filter (fun v -> v.Status = Closed && v.FlowRate > 0)
     |> List.sortByDescending (fun v -> v.FlowRate)
 
+let getConnections adjacency valveId =
+    adjacency[valveId, *]
+    |> Array.mapi (fun i v -> if v then i else -1)
+    |> Array.filter (fun v -> v >= 0)
+
+// let getDistances state =
+//     let ceiling = System.Int32.MaxValue
+    
+
 let act state minute =
     printfn $"== Minute {minute} =="
 
@@ -86,6 +95,7 @@ let act state minute =
 
     state.ReleasedPressure <- state.ReleasedPressure + pressureReleased
 
+    //TODO calculate distances; sort goals on distance & flowrate, pick best one and move towards it
     // open valve
     state.Valves[state.CurrentValve].Status <- Open
     printfn $"You open valve {state.Labels[state.CurrentValve]}."
@@ -96,10 +106,7 @@ let act state minute =
     state.CurrentValve <- nextValve.Id
     printfn $"You move to valve {state.Labels[nextValve.Id]}."
 
-    let moveOptions =
-        state.Adjacency[state.CurrentValve, *]
-        |> Array.mapi (fun i v -> if v then i else -1)
-        |> Array.filter (fun v -> v >= 0)
+    let moveOptions = getConnections state.Adjacency state.CurrentValve
 
     // countdown
     state.RemainingMinutes <- state.RemainingMinutes - 1

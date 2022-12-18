@@ -24,14 +24,17 @@ let setupStack (stacks: Stacks) (instruction: string) : Stacks =
            else
                yield Array.append [| instruction[ 4 * i + 1 ].ToString () |] stacks[i] |]
 
-let parse ([| stackSetup; instructions |]: seq<string>[]) : seq<string> * Stacks =
-    let numberOfStacks = ((stackSetup |> Seq.head |> String.length) + 1) / 4
-    let emptyStack = Array.create numberOfStacks Array.empty
+let parse (flo: seq<string>[]) : seq<string> * Stacks =
+    match flo with
+    | [| stackSetup; instructions |] ->
+        let numberOfStacks = ((stackSetup |> Seq.head |> String.length) + 1) / 4
+        let emptyStack = Array.create numberOfStacks Array.empty
 
-    let initialStack =
-        stackSetup |> Seq.rev |> Seq.skip 1 |> Seq.rev |> Seq.fold setupStack emptyStack
+        let initialStack =
+            stackSetup |> Seq.rev |> Seq.skip 1 |> Seq.rev |> Seq.fold setupStack emptyStack
 
-    instructions, initialStack
+        instructions, initialStack
+    | _ -> failwith "Something happened"
 
 let parseInstruction (instruction: string) : Move =
     let items = instruction.Split ' '
