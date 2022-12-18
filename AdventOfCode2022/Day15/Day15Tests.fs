@@ -36,7 +36,7 @@ let ``coversRowFromDistance correctly calculates cover`` () =
     let sensorData =
         { Position = (8, 7)
           Beacon = (2, 10)
-          Distance = 9 }
+          Radius = 9 }
     let actual = coversRowFromDistance 10 sensorData
     Assert.AreEqual(set [2..14], actual)
     

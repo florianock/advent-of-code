@@ -7,13 +7,13 @@ open System.Text.RegularExpressions
 type SensorData =
     { Position: int * int
       Beacon: int * int
-      Distance: int }
+      Radius: int }
 
 let preprocess (puzzle: string) =
     let defaultSensor =
         { Position = (0, 0)
           Beacon = (0, 0)
-          Distance = 0 }
+          Radius = 0 }
 
     puzzle.TrimEnd().Split("\n")
     |> Array.map (fun l ->
@@ -27,13 +27,13 @@ let inline dist (x1, y1) (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
 
 let coversRowFromDistance row sensor =
     let x, y = sensor.Position
-    let minY = y - sensor.Distance
-    let maxY = y + sensor.Distance
+    let minY = y - sensor.Radius
+    let maxY = y + sensor.Radius
 
     if minY <= row && row <= maxY then
         let diffY = abs (y - row)
-        let minXOnRow = x - sensor.Distance + diffY
-        let maxXOnRow = x + sensor.Distance - diffY
+        let minXOnRow = x - sensor.Radius + diffY
+        let maxXOnRow = x + sensor.Radius - diffY
         [| minXOnRow..maxXOnRow |]
     else
         [||]
@@ -53,7 +53,7 @@ let getBeaconsOnRow targetRow sensorData =
 let solvePart1 (targetRow: int) sensorData : int =
     let sensorsWithDistances =
         sensorData
-        |> Array.map (fun s -> { s with Distance = dist s.Position s.Beacon })
+        |> Array.map (fun s -> { s with Radius = dist s.Position s.Beacon })
 
     let rowCoverage = getRowCoverage targetRow sensorsWithDistances
     let beaconsOnRow = getBeaconsOnRow targetRow sensorData
@@ -80,7 +80,7 @@ let solvePart2Slow (searchSpace: int) sensorsAndBeacons : uint64 =
 
 let inline generatePerimeter searchSpace sensor : (int * int) seq =
     let x, y = sensor.Position
-    let d = sensor.Distance
+    let d = sensor.Radius
 
     seq {
         let minY = y - d - 1
@@ -99,16 +99,12 @@ let inline generatePerimeter searchSpace sensor : (int * int) seq =
                 yield (maxX, i)
     }
 
-// there is no sensor s where dist s point <= s.Distance
-// there is no sensor where point is within range
-// for all sensors, dist s point > s.Distance
 let tryFreePointOnPerimeter (searchSpace: int) (sensors: SensorData[]) sensor =
     let rec loop space lst points =
-    // todo see if it helps performance if lst (which is a constant) remains in outer context
         match Seq.tryHead points with
         | None -> None
         | Some point ->
-            if Array.forall (fun s -> (dist s.Position point) > s.Distance) lst then
+            if Array.forall (fun s -> (dist s.Position point) > s.Radius) lst then
                 Some point
             else
                 loop space lst (Seq.tail points)
@@ -122,7 +118,6 @@ let tryFindGap (searchSpace: int) (sensorData: SensorData[]) : (int * int) optio
         match Array.tryHead lst with
         | None -> None
         | Some sensor ->
-            printfn "hi"
             let result = tryFreePointOnPerimeter space allSensors sensor
             match result with
             | Some p -> Some p
@@ -130,10 +125,22 @@ let tryFindGap (searchSpace: int) (sensorData: SensorData[]) : (int * int) optio
     
     loop searchSpace sensorData sensorData
 
-let solvePart2 (searchSpace: int) (sensorData: SensorData array) : int =
+let solvePart2StillSlow (searchSpace: int) (sensorData: SensorData array) : int =
     sensorData
-    |> Array.map (fun s -> { s with Distance = dist s.Position s.Beacon })
+    |> Array.map (fun s -> { s with Radius = dist s.Position s.Beacon })
     |> tryFindGap searchSpace
     |> function
         | Some(x, y) -> x * 4_000_000 + y
         | None -> failwith "No free point was found."
+
+let getIntersections space sensorData =
+    let minX = fst sensorData.Position - sensorData.Radius
+    let maxX = fst sensorData.Position + sensorData.Radius
+    let minY = snd sensorData.Position - sensorData.Radius
+    let maxY = snd sensorData.Position + sensorData.Radius
+    0
+
+let solvePart2 (searchSpace: int) (sensorData: SensorData array) : int =
+    sensorData
+    |> Array.map (fun s -> { s with Radius = dist s.Position s.Beacon })
+    |> getIntersections searchSpace
