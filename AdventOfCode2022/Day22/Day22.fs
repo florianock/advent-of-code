@@ -1,6 +1,8 @@
 ﻿module Day22
 
-let preprocess (puzzle: string) : seq<string> = puzzle.TrimEnd().Split "\n"
+// --- Day 22: Monkey Map ---
+
+let preprocess (puzzle: string) : seq<string> = puzzle.TrimEnd().Split "\n\n"
 
 let solvePart1 (input: seq<string>) = 0
 
