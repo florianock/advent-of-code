@@ -49,18 +49,20 @@ let preprocess (puzzle: string) =
     |> Array.map (fun m -> m.Split (": ") |> parseMonkey)
     |> Map
 
-let getOperator (op: Operator) =
+let doCalculation (op: Operator) a b =
     match op with
-    | Add -> (+)
-    | Subtract -> (-)
-    | Divide -> (/)
-    | Multiply -> (*)
+    | Add -> a + b
+    | Subtract -> a - b
+    | Divide ->
+        assert (a % b = 0L)
+        a / b
+    | Multiply -> a * b
 
 let solve monkeys monkey =
     let rec go (lookup: Map<string, MonkeyShout>) (simian: string) =
         match lookup[simian] with
         | Primitive i -> i
-        | Operation (op, simianA, simianB) -> (getOperator op) (go lookup simianA) (go lookup simianB)
+        | Operation (op, simianA, simianB) -> doCalculation op (go lookup simianA) (go lookup simianB)
         | X -> failwith "Can only solve for Primitive and Operation. You should use solveForX"
 
     go monkeys monkey
@@ -81,15 +83,21 @@ let inline getGoalForX (goal: int64) (operator: Operator, left: int64 option, ri
         | Subtract -> goal + value
         | Add -> goal - value
         | Divide -> goal * value
-        | Multiply -> goal / value
+        | Multiply ->
+            assert (goal % value = 0L)
+            goal / value
     else
         let value = left.Value
 
         match operator with
         | Subtract -> value - goal
         | Add -> goal - value
-        | Divide -> value / goal
-        | Multiply -> goal / value
+        | Divide ->
+            assert (value % goal = 0L)
+            value / goal
+        | Multiply ->
+            assert (goal % value = 0L)
+            goal / value
 
 let solveForX (goal: int64) (monkeys: Map<string, MonkeyShout>) (monkey: string) =
     let rec loop g (ms: Map<string, MonkeyShout>) m =
