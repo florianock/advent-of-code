@@ -1,6 +1,5 @@
 ﻿module Day16Tests
 
-open System
 open NUnit.Framework
 open Day16
 

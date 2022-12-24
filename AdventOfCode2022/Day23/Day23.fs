@@ -12,23 +12,51 @@ type Direction =
     | W
     | NW
 
-let preprocess (puzzle: string) : seq<string> = puzzle.TrimEnd().Split "\n"
+let preprocess (puzzle: string) : char[,] = puzzle.TrimEnd().Split "\n" |> array2D
 
-let solvePart1 (input: seq<string>) = 0
+let preferredDirections = [| N; S; W; E; N; S; W; E; N; S |]
 
-let solvePart2 (input: seq<string>) = 0
+let isElf field (x, y) = field[x, y] = '#'
 
-let test =
-    @"....#..
-..###.#
-#...#.#
-.#...##
-#.###..
-##.#.##
-.#..#.."
+let freeToMove field (x, y) direction =
+    match direction with
+    | N
+    | NE
+    | NW ->
+        isElf field (x - 1, y - 1)
+        || isElf field (x, y - 1)
+        || isElf field (x + 1, y - 1)
+    | NE
+    | E
+    | SE ->
+        isElf field (x + 1, y - 1)
+        || isElf field (x + 1, y)
+        || isElf field (x + 1, y + 1)
+    | SE
+    | S
+    | SW ->
+        isElf field (x + 1, y + 1)
+        || isElf field (x, y + 1)
+        || isElf field (x - 1, y + 1)
+    | SW
+    | W
+    | NW ->
+        isElf field (x - 1, y + 1)
+        || isElf field (x - 1, y)
+        || isElf field (x - 1, y - 1)
 
-let field = test.TrimEnd().Split "\n" |> Array.toList
-let preferredDirections = [| N; S; E; W; N; S; E; W; N; S |] 
+let step (field: char[,]) i = field
 
-field
-|> List.
+let countEmptySpaces (field: char[,]) =
+    let mutable empty = 0
+
+    for c in field do
+        if c = '.' then
+            empty <- empty + 1
+
+    empty
+
+let solvePart1 (input: char[,]) =
+    (input, [ 1..10 ]) ||> List.fold step |> countEmptySpaces
+
+let solvePart2 (input: char[,]) = 0
