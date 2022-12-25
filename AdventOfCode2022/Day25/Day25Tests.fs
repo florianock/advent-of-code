@@ -62,8 +62,8 @@ type SnafuTests () =
     [<TestCase(4890, "2=-1=0")>]
     [<TestCase(12345, "1-0---0")>]
     [<TestCase(314159265, "1121-1110-1=0")>]
-    member this.TestSnafuToDecimal(expected, snafu) =
-        let actual = snafuToDecimal snafu
+    member this.toDecimal(expected, snafu) =
+        let actual = Snafu.toDecimal snafu
         Assert.AreEqual (expected, actual)
 
     [<TestCase("1", 1)>]
@@ -84,5 +84,5 @@ type SnafuTests () =
     [<TestCase("1-0---0", 12345)>]
     [<TestCase("1121-1110-1=0", 314159265)>]
     member this.TestDecimalToSnafu(expected, dec) =
-        let actual = decimalToSnafu dec
+        let actual = Snafu.fromDecimal dec
         Assert.AreEqual (expected, actual)

@@ -6,44 +6,43 @@ open Checked
 
 let preprocess (puzzle: string) : seq<string> = puzzle.TrimEnd().Split "\n"
 
-let snafuToDecimal number =
-    if number |> String.length < 1 then
-        failwith $"NaN {number}"
+module Snafu =
+    let toDecimal number =
+        if number |> String.length < 1 then
+            failwith $"NaN {number}"
 
-    number
-    |> Seq.rev
-    |> Seq.mapi (fun i c ->
-        let powerOf5 = pown 5L i
+        number
+        |> Seq.rev
+        |> Seq.mapi (fun i c ->
+            match c with
+            | '2'
+            | '1'
+            | '0' -> (pown 5L i) * (int64 (c.ToString ()))
+            | '-' -> (pown 5L i) * -1L
+            | '=' -> (pown 5L i) * -2L
+            | _ -> failwith $"Wrong input {c}")
+        |> Seq.sum
 
-        match c with
-        | '2'
-        | '1'
-        | '0' -> powerOf5 * (int64 (c.ToString ()))
-        | '-' -> powerOf5 * -1L
-        | '=' -> powerOf5 * -2L
-        | _ -> failwith $"Wrong input {c}")
-    |> Seq.sum
+    let fromDecimal dec =
+        let chars = [| "0"; "1"; "2"; "="; "-" |]
 
-let inline mapToSnafu num =
-    let chars = [| "0"; "1"; "2"; "="; "-" |]
+        let inline getChar n =
+            if 0L <= n && n <= 2L then (chars[int n], 0L)
+            elif n = 3L || n = 4L then (chars[int n], 5L)
+            else failwith $"Unable to process number {n}"
 
-    if 0L <= num && num <= 2L then (chars[int num], 0L)
-    elif num = 3L || num = 4L then (chars[int num], 1L)
-    else failwith $"Unable to process number {num}"
+        let mutable result = ""
+        let mutable num = dec
 
-let decimalToSnafu dec =
-    let mutable snafu = ""
-    let mutable num = dec
+        while num > 0L do
+            let n = num % 5L
+            let newN, extra = getChar n
+            result <- result + newN
+            num <- (num + extra) / 5L
 
-    while num > 0L do
-        let n = num % 5L
-        let newN, extra = mapToSnafu n
-        snafu <- snafu + newN
-        num <- (num + (5L * extra)) / 5L
-
-    snafu |> Seq.rev |> Seq.map string |> Seq.fold (+) ""
+        result |> Seq.rev |> Seq.map string |> Seq.fold (+) ""
 
 let solvePart1 (input: seq<string>) =
-    input |> Seq.sumBy snafuToDecimal |> decimalToSnafu
+    input |> Seq.sumBy Snafu.toDecimal |> Snafu.fromDecimal
 
 let solvePart2 (input: seq<string>) = "tbd"
